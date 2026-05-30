@@ -1,1 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Milena Gaitán — Industrial Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  :root {
+    --bg: #F5F3EE;
+    --ink: #1A1A18;
+    --muted: #888880;
+    --border: #D8D5CE;
+    --accent: #C8BFA8;
+    --white: #FDFCF9;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Mono', monospace;
+    font-weight: 300;
+    min-height: 100vh;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 8px; height: 8px;
+    background: var(--ink);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
+  }
+  .cursor.hover {
+    width: 40px; height: 40px;
+    background: transparent;
+    border: 1px solid var(--ink);
+  }
+
+  /* Nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5rem 2rem;
+    mix-blend-mode: normal;
+    background: var(--bg);
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .nav-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex; gap: 2rem;
+  }
+
+  .nav-links a {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--ink); }
+
+  /* Hero */
+  .hero {
+    padding: 8rem 2rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: end;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(48px, 7vw, 80px);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  .hero-meta {
+    padding-bottom: 0.5rem;
+  }
+
+  .hero-meta p {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 2;
+  }
+
+  .hero-meta a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .hero-meta a:hover { color: var(--ink); }
+
+  /* Filters */
+  .filters {
+    display: flex;
+    gap: 0;
+    padding: 1.5rem 2rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .filter-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 20px;
+    border: 0.5px solid var(--border);
+    border-right: none;
+    background: transparent;
+    color: var(--muted);
+    cursor: none;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:last-child { border-right: 0.5px solid var(--border); }
+  .filter-btn:hover { color: var(--ink); background: var(--white); }
+  .filter-btn.active { background: var(--ink); color: var(--white); border-color: var(--ink); }
+
+  /* Grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+
+  .cell {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    cursor: none;
+    border-right: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+    background: var(--white);
+  }
+
+  .cell:nth-child(3n) { border-right: none; }
+
+  .cell-bg {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .cell:hover .cell-bg { transform: scale(1.04); }
+
+  .cell-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--border);
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .cell:hover .cell-placeholder { transform: scale(1.04); }
+
+  .bg-1 { background: #EAE5DC; }
+  .bg-2 { background: #DCE5E0; }
+  .bg-3 { background: #E5DCE8; }
+  .bg-4 { background: #E8E0D4; }
+  .bg-5 { background: #D4E0E8; }
+  .bg-6 { background: #E8E5D4; }
+
+  .cell-overlay {
+    position: absolute; inset: 0;
+    background: rgba(245, 243, 238, 0);
+    display: flex; flex-direction: column;
+    align-items: flex-start; justify-content: flex-end;
+    padding: 1.5rem;
+    transition: background 0.35s ease;
+  }
+
+  .cell:hover .cell-overlay {
+    background: rgba(245, 243, 238, 0.88);
+  }
+
+  .proj-tag {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.25s ease 0.05s;
+    margin-bottom: 4px;
+  }
+
+  .proj-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--ink);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.25s ease 0.1s;
+    line-height: 1.2;
+  }
+
+  .proj-arrow {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.25s ease 0.15s;
+    margin-top: 8px;
+  }
+
+  .cell:hover .proj-tag,
+  .cell:hover .proj-name,
+  .cell:hover .proj-arrow {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .hidden { display: none !important; }
+
+  /* About */
+  .about {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 4rem;
+    padding: 4rem 2rem;
+    border-top: 0.5px solid var(--border);
+  }
+
+  .about-label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .about-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  .about-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 0.5px solid var(--border);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    line-height: 2;
+    grid-column: 2;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 0.5px solid var(--border);
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer p {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+
+  .footer-links {
+    display: flex; gap: 2rem;
+  }
+
+  .footer-links a {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--ink); }
+
+  /* Page load animation */
+  .fade-in {
+    animation: fadeIn 0.8s ease forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  .fade-in:nth-child(1) { animation-delay: 0.1s; }
+  .fade-in:nth-child(2) { animation-delay: 0.2s; }
+  .fade-in:nth-child(3) { animation-delay: 0.3s; }
+  .fade-in:nth-child(4) { animation-delay: 0.4s; }
+  .fade-in:nth-child(5) { animation-delay: 0.5s; }
+  .fade-in:nth-child(6) { animation-delay: 0.6s; }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<nav>
+  <a href="#" class="nav-name">Milena Gaitán Cáceres</a>
+  <div class="nav-links">
+    <a href="#projects">Projects</a>
+    <a href="#about">About</a>
+    <a href="mailto:milemdq@gmail.com">Contact</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <h1 class="hero-title">Industrial<br><em>Designer</em></h1>
+  <div class="hero-meta">
+    <p>Product development · Softgoods · Digital fabrication</p>
+    <p>Mar del Plata → San Sebastián</p>
+    <p style="margin-top:1rem;">
+      <a href="https://behance.net/milenagaitan" target="_blank">Behance</a> &nbsp;·&nbsp;
+      <a href="https://linkedin.com/in/milenagaitan" target="_blank">LinkedIn</a> &nbsp;·&nbsp;
+      <a href="mailto:milemdq@gmail.com">milemdq@gmail.com</a>
+    </p>
+  </div>
+</section>
+
+<div class="filters" id="projects">
+  <button class="filter-btn active" onclick="filter('all', this)">All</button>
+  <button class="filter-btn" onclick="filter('producto', this)">Product & Textile</button>
+  <button class="filter-btn" onclick="filter('digital', this)">Digital Fabrication</button>
+</div>
+
+<div class="grid" id="grid">
+  <div class="cell fade-in" data-cat="producto">
+    <div class="cell-placeholder bg-1">image</div>
+    <div class="cell-overlay">
+      <span class="proj-tag">Textile · Digital manufacturing</span>
+      <span class="proj-name">Textiles 4.0</span>
+      <span class="proj-arrow">View project →</span>
+    </div>
+  </div>
+  <div class="cell fade-in" data-cat="producto">
+    <div class="cell-placeholder bg-2">image</div>
+    <div class="cell-overlay">
+      <span class="proj-tag">Softgoods · Surf & Skate</span>
+      <span class="proj-name">Product development</span>
+      <span class="proj-arrow">View project →</span>
+    </div>
+  </div>
+  <div class="cell fade-in" data-cat="producto">
+    <div class="cell-placeholder bg-3">image</div>
+    <div class="cell-overlay">
+      <span class="proj-tag">Textile design</span>
+      <span class="proj-name">Patterns & Weaving</span>
+      <span class="proj-arrow">View project →</span>
+    </div>
+  </div>
+  <div class="cell fade-in" data-cat="digital">
+    <div class="cell-placeholder bg-4">image</div>
+    <div class="cell-overlay">
+      <span class="proj-tag">Additive manufacturing</span>
+      <span class="proj-name">Toolpath optimization</span>
+      <span class="proj-arrow">View project →</span>
+    </div>
+  </div>
+  <div class="cell fade-in" data-cat="digital">
+    <div class="cell-placeholder bg-5">image</div>
+    <div class="cell-overlay">
+      <span class="proj-tag">Software · Python</span>
+      <span class="proj-name">Parametric design tool</span>
+      <span class="proj-arrow">View project →</span>
+    </div>
+  </div>
+  <div class="cell fade-in" data-cat="digital">
+    <div class="cell-placeholder bg-6">image</div>
+    <div class="cell-overlay">
+      <span class="proj-tag">Bioprinting · R&D</span>
+      <span class="proj-name">4D patterns — ForceRepair</span>
+      <span class="proj-arrow">View project →</span>
+    </div>
+  </div>
+</div>
+
+<section class="about" id="about">
+  <div>
+    <p class="about-label">About</p>
+  </div>
+  <div>
+    <p class="about-text">Industrial Designer with a Master's in Digital Manufacturing. I work across the full product lifecycle — from concept and CAD to prototyping and manufacturing documentation. Grew up surfing in Mar del Plata. Moved to the Basque Country to keep learning.</p>
+    <div class="about-details">
+      <div>
+        <p style="color: var(--ink); margin-bottom: 0.5rem;">Skills</p>
+        <p>Rhinoceros · Blender · AutoCAD</p>
+        <p>3D printing · CAM · Parametric design</p>
+        <p>Softgoods · Pattern making</p>
+        <p>Python · Qt · Illustrator</p>
+      </div>
+      <div>
+        <p style="color: var(--ink); margin-bottom: 0.5rem;">Info</p>
+        <p>Based in San Sebastián, Spain</p>
+        <p>EU passport · Open to relocate</p>
+        <p>ES native · EN professional · FR basic</p>
+        <p>+34 615 311 234</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Milena Gaitán · Industrial Designer</p>
+  <div class="footer-links">
+    <a href="https://behance.net/milenagaitan" target="_blank">Behance</a>
+    <a href="https://linkedin.com/in/milenagaitan" target="_blank">LinkedIn</a>
+    <a href="mailto:milemdq@gmail.com">Email</a>
+  </div>
+</footer>
+
+<script>
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+});
+document.querySelectorAll('a, button, .cell').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+});
+
+function filter(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.cell').forEach(c => {
+    if (cat === 'all' || c.dataset.cat === cat) {
+      c.classList.remove('hidden');
+    } else {
+      c.classList.add('hidden');
+    }
+  });
+}
+</script>
+</body>
+</html>
